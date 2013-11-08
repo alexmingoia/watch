@@ -95,13 +95,17 @@ func main() {
 		for {
 			select {
 			case ev := <-watcher.Event:
-				fmt.Fprintln(os.Stdout, ev)
-				if ((time.Since(last).Nanoseconds() > interval.Nanoseconds())) {
+				if !opts.Quiet {
+					fmt.Fprintln(os.Stdout, ev)
+				}
+				if time.Since(last).Nanoseconds() > interval.Nanoseconds() {
 					last = time.Now()
 					err = ExecCommand()
-					if err != nil && opts.Halt {
+					if err != nil {
 						fmt.Fprintln(os.Stderr, err)
-						os.Exit(1)
+						if opts.Halt {
+							os.Exit(1)
+						}
 					}
 				}
 			case err := <-watcher.Error:
