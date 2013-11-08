@@ -8,12 +8,12 @@ Watch files and folders for changes, and run commands when they change.
 
 Download a pre-built binary release for Linux, OS X, or Windows
 
-* [Linux 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-linux-amd64.tbz) SHA1 checksum: 196be91b6ba3c38a5d9b4992c1f08f0b5d237634
-* [Linux 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-linux-386.tbz) SHA1 checksum: 89075990c13b05747889536a30018f46d468f852
-* [OS X 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-darwin-amd64.tbz) SHA1 checksum: 760f13f607a0991031f66f7493b86a0f90ee36ef
-* [OS X 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-darwin-386.tbz) SHA1 checksum: 40ea20b168c0955f4aa2b1c6fdd2ef3c21302284
-* [Windows 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-windows-amd64.zip) SHA1 checksum: f41b30e4afdf04e767e379160321b79fbeb7b756
-* [Windows 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.1-windows-386.zip) SHA1 checksum: a493ac3f840ed7b7ec1c7ac8f8e9555571082d21
+* [Linux 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-linux-amd64.tbz) SHA1 checksum: 6cf6cd78d6971c5996eb2d95847c7460ce790409
+* [Linux 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-linux-386.tbz) SHA1 checksum: a68a858f067c96cb43819c808a5b5b248c7e8e2c
+* [OS X 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-darwin-amd64.tbz) SHA1 checksum: b1b769c42901c700248dd5a25270a9d962227ad8
+* [OS X 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-darwin-386.tbz) SHA1 checksum: 02a59dfb8c72231b7ce238ae862064c26fa58d60
+* [Windows 64-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-windows-amd64.zip) SHA1 checksum: 09a9079a92929fddf90a860b32932be047907720
+* [Windows 32-bit](https://s3.amazonaws.com/acm-binaries/watch-0.2.0-windows-386.zip) SHA1 checksum: 8cc96257cb207ebe171039fcbd2051bcea16016f
 
 ### Compile from source
 
