@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/signal"
 	"os/exec"
-	"log"
 	"path/filepath"
 	"fmt"
 	"github.com/jessevdk/go-flags"
@@ -25,7 +24,7 @@ Options:
   -h, --halt             Exits on error (Default: false)
   -i, --interval <arg>   Run command once within this interval (Default: 1s)
   -r, --recursive        Watch subfolders (Default: true)
-  -q, --quiet            Suppress all output (Default: false)
+  -q, --quiet            Suppress standard output (Default: false)
 
 Intervals can be milliseconds(ms), seconds(s), minutes(m), or hours(h).
 The format is the integer followed by the abbreviation.
@@ -41,7 +40,7 @@ var (
 var opts struct {
 	Help      bool   `short:"h" long:"help"      description:"Show this help message" default:false`
 	Halt      bool   `short:"h" long:"halt"      description:"Exits on error (Default: false)" default:false`
-	Quiet     bool   `short:"q" long:"quiet"     description:"Suppress all output (Default: false)" default:false`
+	Quiet     bool   `short:"q" long:"quiet"     description:"Suppress standard output (Default: false)" default:false`
 	Interval  string `short:"i" long:"interval"  description:"Run command once within this interval (Default: 1s)" default:"1s"`
 	Recursive bool   `short:"r" long:"recursive" description:"Watch subfolders (Default: true)" default:true`
 	OnChange  string `long:"on-change"           description:"Run command on change."`
@@ -50,7 +49,8 @@ var opts struct {
 func init() {
 	args, err := flags.ParseArgs(&opts, os.Args)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	paths, err = ResolvePaths(args[1:])
@@ -62,7 +62,8 @@ func init() {
 
 	interval, err = time.ParseDuration(opts.Interval)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	last = time.Now().Add(-interval)
@@ -71,7 +72,8 @@ func init() {
 func main() {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 	done := make(chan bool)
 
@@ -81,7 +83,7 @@ func main() {
 	go func() {
 		<-interrupt
 		if !opts.Quiet {
-			log.Println("Interrupted. Cleaning up before exiting...")
+			fmt.Fprintln(os.Stdout, "Interrupted. Cleaning up before exiting...")
 		}
 		watcher.Close()
 		os.Exit(0)
@@ -93,19 +95,19 @@ func main() {
 		for {
 			select {
 			case ev := <-watcher.Event:
-				log.Println(ev)
+				fmt.Fprintln(os.Stdout, ev)
 				if ((time.Since(last).Nanoseconds() > interval.Nanoseconds())) {
 					last = time.Now()
 					err = ExecCommand()
 					if err != nil && opts.Halt {
-						log.Fatal(err)
+						fmt.Fprintln(os.Stderr, err)
+						os.Exit(1)
 					}
 				}
 			case err := <-watcher.Error:
+				fmt.Fprintln(os.Stderr, err)
 				if opts.Halt {
-					log.Fatal(err)
-				} else {
-					log.Println(err, os.Stderr)
+					os.Exit(1)
 				}
 			}
 		}
@@ -115,7 +117,8 @@ func main() {
 	for _, p := range paths {
 		err = watcher.Watch(p)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
 	}
 
