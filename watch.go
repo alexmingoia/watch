@@ -10,6 +10,7 @@ import (
 	"time"
 	"strings"
 	"github.com/howeyc/fsnotify"
+	"sync"
 )
 
 const usage = `
@@ -42,7 +43,7 @@ var opts struct {
 	Halt      bool   `short:"h" long:"halt"      description:"Exits on error (Default: false)" default:false`
 	Quiet     bool   `short:"q" long:"quiet"     description:"Suppress standard output (Default: false)" default:false`
 	Interval  string `short:"i" long:"interval"  description:"Run command once within this interval (Default: 1s)" default:"1s"`
-	Recursive bool   `short:"r" long:"recursive" description:"Watch subfolders (Default: true)" default:true`
+	NoRecursive bool   `short:"n" long:"no-recursive" description:"Skip subfolders (Default: false)" default:false`
 	OnChange  string `long:"on-change"           description:"Run command on change."`
 }
 
@@ -152,16 +153,23 @@ func ResolvePaths(args []string) ([]string, error) {
 	var stat os.FileInfo
 	resolved := make([]string, 0)
 
+	var once sync.Once
+	var recurse error = nil
+
 	walker := func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
-		if info.IsDir() {
-			resolved = append(resolved, path)
+		if recurse == nil && opts.NoRecursive && info.IsDir() {
+			once.Do(func() {
+				recurse = filepath.SkipDir
+			})
 		}
 
-		return nil
+		resolved = append(resolved, path)
+
+		return recurse
 	}
 
 	for _, path:= range args {
