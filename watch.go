@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -152,18 +151,15 @@ func ResolvePaths(args []string) ([]string, error) {
 	var stat os.FileInfo
 	resolved := make([]string, 0)
 
-	var once sync.Once
 	var recurse error = nil
+
+	if opts.NoRecursive {
+		recurse = filepath.SkipDir
+	}
 
 	walker := func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
-		}
-
-		if recurse == nil && opts.NoRecursive && info.IsDir() {
-			once.Do(func() {
-				recurse = filepath.SkipDir
-			})
 		}
 
 		resolved = append(resolved, path)
