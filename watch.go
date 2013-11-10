@@ -1,16 +1,16 @@
 package main
 
 import (
-	"os"
-	"os/signal"
-	"os/exec"
-	"path/filepath"
 	"fmt"
-	"github.com/jessevdk/go-flags"
-	"time"
-	"strings"
 	"github.com/howeyc/fsnotify"
+	"github.com/jessevdk/go-flags"
+	"os"
+	"os/exec"
+	"os/signal"
+	"path/filepath"
+	"strings"
 	"sync"
+	"time"
 )
 
 const usage = `
@@ -24,7 +24,7 @@ Options:
       --on-change <arg>  Run command on any change
   -h, --halt             Exits on error (Default: false)
   -i, --interval <arg>   Run command once within this interval (Default: 1s)
-  -r, --recursive        Watch subfolders (Default: true)
+  -n, --no-recurse       Skip subfolders (Default: false)
   -q, --quiet            Suppress standard output (Default: false)
 
 Intervals can be milliseconds(ms), seconds(s), minutes(m), or hours(h).
@@ -32,19 +32,19 @@ The format is the integer followed by the abbreviation.
 `
 
 var (
-	last        time.Time
-	interval    time.Duration
-	paths       []string
-	err         error
+	last     time.Time
+	interval time.Duration
+	paths    []string
+	err      error
 )
 
 var opts struct {
-	Help      bool   `short:"h" long:"help"      description:"Show this help message" default:false`
-	Halt      bool   `short:"h" long:"halt"      description:"Exits on error (Default: false)" default:false`
-	Quiet     bool   `short:"q" long:"quiet"     description:"Suppress standard output (Default: false)" default:false`
-	Interval  string `short:"i" long:"interval"  description:"Run command once within this interval (Default: 1s)" default:"1s"`
+	Help        bool   `short:"h" long:"help"      description:"Show this help message" default:false`
+	Halt        bool   `short:"h" long:"halt"      description:"Exits on error (Default: false)" default:false`
+	Quiet       bool   `short:"q" long:"quiet"     description:"Suppress standard output (Default: false)" default:false`
+	Interval    string `short:"i" long:"interval"  description:"Run command once within this interval (Default: 1s)" default:"1s"`
 	NoRecursive bool   `short:"n" long:"no-recursive" description:"Skip subfolders (Default: false)" default:false`
-	OnChange  string `long:"on-change"           description:"Run command on change."`
+	OnChange    string `long:"on-change"           description:"Run command on change."`
 }
 
 func init() {
@@ -89,7 +89,6 @@ func main() {
 		watcher.Close()
 		os.Exit(0)
 	}()
-
 
 	// process watcher events
 	go func() {
@@ -172,8 +171,8 @@ func ResolvePaths(args []string) ([]string, error) {
 		return recurse
 	}
 
-	for _, path:= range args {
-		if (path == "") {
+	for _, path := range args {
+		if path == "" {
 			continue
 		}
 
