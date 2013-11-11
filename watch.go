@@ -162,7 +162,9 @@ func ResolvePaths(args []string) ([]string, error) {
 			return err
 		}
 
-		resolved = append(resolved, path)
+		if info.isDir() {
+			resolved = append(resolved, path)
+		}
 
 		return recurse
 	}
