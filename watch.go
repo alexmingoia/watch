@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+const version = "0.3.0"
+
 const usage = `
 Usage:
   watch paths... [options]
@@ -24,6 +26,7 @@ Options:
   -h, --halt             Exits on error (Default: false)
   -i, --interval <arg>   Run command once within this interval (Default: 1s)
   -n, --no-recurse       Skip subfolders (Default: false)
+  -V, --version          Output the version number
   -q, --quiet            Suppress standard output (Default: false)
 
 Intervals can be milliseconds(ms), seconds(s), minutes(m), or hours(h).
@@ -43,6 +46,7 @@ var opts struct {
 	Quiet       bool   `short:"q" long:"quiet"      description:"Suppress standard output (Default: false)" default:false`
 	Interval    string `short:"i" long:"interval"   description:"Run command once within this interval (Default: 1s)" default:"1s"`
 	NoRecurse   bool   `short:"n" long:"no-recurse" description:"Skip subfolders (Default: false)" default:false`
+	Version     bool   `short:"V" long:"version"    description:"Output the version number" default:false`
 	OnChange    string `long:"on-change"            description:"Run command on change."`
 }
 
@@ -51,6 +55,11 @@ func init() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
+	}
+
+	if opts.Version {
+		fmt.Fprintln(os.Stdout, version)
+		os.Exit(0)
 	}
 
 	paths, err = ResolvePaths(args[1:])
