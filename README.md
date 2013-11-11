@@ -32,7 +32,7 @@ Download a pre-built binary release for Linux, OS X, or Windows
 `    --on-change <arg>`  Run command on any change  
 `-h, --halt`             Exits on error (Default: false)  
 `-i, --interval <arg>`   Run command once within this interval (Default: 1s)  
-`-r, --recursive`        Watch subfolders (Default: true)  
+`-n, --no-recurse`       Skip subfolders (Default: false)  
 `-q, --quiet`            Suppress all output (Default: false)
 
 Intervals can be milliseconds(ms), seconds(s), minutes(m), or hours(h).

@@ -38,12 +38,12 @@ var (
 )
 
 var opts struct {
-	Help        bool   `short:"h" long:"help"      description:"Show this help message" default:false`
-	Halt        bool   `short:"h" long:"halt"      description:"Exits on error (Default: false)" default:false`
-	Quiet       bool   `short:"q" long:"quiet"     description:"Suppress standard output (Default: false)" default:false`
-	Interval    string `short:"i" long:"interval"  description:"Run command once within this interval (Default: 1s)" default:"1s"`
-	NoRecursive bool   `short:"n" long:"no-recursive" description:"Skip subfolders (Default: false)" default:false`
-	OnChange    string `long:"on-change"           description:"Run command on change."`
+	Help        bool   `short:"h" long:"help"       description:"Show this help message" default:false`
+	Halt        bool   `short:"h" long:"halt"       description:"Exits on error (Default: false)" default:false`
+	Quiet       bool   `short:"q" long:"quiet"      description:"Suppress standard output (Default: false)" default:false`
+	Interval    string `short:"i" long:"interval"   description:"Run command once within this interval (Default: 1s)" default:"1s"`
+	NoRecurse   bool   `short:"n" long:"no-recurse" description:"Skip subfolders (Default: false)" default:false`
+	OnChange    string `long:"on-change"            description:"Run command on change."`
 }
 
 func init() {
@@ -153,7 +153,7 @@ func ResolvePaths(args []string) ([]string, error) {
 
 	var recurse error = nil
 
-	if opts.NoRecursive {
+	if opts.NoRecurse {
 		recurse = filepath.SkipDir
 	}
 
@@ -162,7 +162,7 @@ func ResolvePaths(args []string) ([]string, error) {
 			return err
 		}
 
-		if info.isDir() {
+		if info.IsDir() {
 			resolved = append(resolved, path)
 		}
 
